@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Amenities;
 use App\Models\PropertyType;
 use Illuminate\Http\Request;
 
@@ -72,7 +73,7 @@ class PropertyTypeController extends Controller
 
     public function DeleteType($id)
     {
-        PropertyType::findOrFail($id)->delete;
+        PropertyType::findOrFail($id)->delete();
 
         $notification = [
             'message'       => 'Property type deleted successfully',
@@ -81,6 +82,80 @@ class PropertyTypeController extends Controller
 
         return redirect()->route('all.type')->with($notification);
     } //End method
+
+
+    /////////// Amenities All method
+    public function AllAmenitie()
+    {
+        $amenities = Amenities::latest()->get();
+
+        return view('backend.amenities.all_amenities' , compact('amenities'));
+    } //End method
+
+    public function AddAmenitie()
+    {
+        return view('backend.amenities.add_amenities');
+    } //End method
+
+    public function StoreAmenitie(Request $request)
+    {
+        //validation
+        $request->validate([
+            'amenities_name' => 'required|unique:amenities|max:200',
+        ]);
+
+        Amenities::insert([
+            'amenities_name' => $request->amenities_name,
+
+        ]);
+
+        $notification = [
+            'message'       => 'Amenities created successfully',
+            'alert-type'    => 'success'
+        ];
+
+        return redirect()->route('all.amenitie')->with($notification);
+
+    } //End method
+
+    public function EditAmenitie($id)
+    {
+        $amenities = Amenities::findOrFail($id);
+
+        return view('backend.amenities.edit_amenities' , compact('amenities'));
+    } //End method
+
+    public function UpdateAmenitie(Request $request)
+    {
+
+        $ame_id = $request->id;
+
+        Amenities::findOrFail($ame_id)->update([
+            'amenities_name' => $request->amenities_name,
+
+        ]);
+
+        $notification = [
+            'message'       => 'Amenities updated successfully',
+            'alert-type'    => 'success'
+        ];
+
+        return redirect()->route('all.amenitie')->with($notification);
+
+    } //End method
+
+    public function DeleteAmenitie($id)
+    {
+        Amenities::findOrFail($id)->delete();
+
+        $notification = [
+            'message'       => 'Amenitie deleted successfully',
+            'alert-type'    => 'success'
+        ];
+
+        return redirect()->route('all.amenitie')->with($notification);
+    } //End method
+
 
 
 }
