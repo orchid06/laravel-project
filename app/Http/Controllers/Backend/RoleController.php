@@ -8,6 +8,7 @@ use App\Imports\PermissionImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
@@ -110,4 +111,93 @@ class RoleController extends Controller
 
 
     }
+
+
+
+    ///////////Role All method ///////////////
+
+
+    public function AllRole()
+    {
+        $roles = Role::all();
+
+        return view('backend.pages.roles.all_roles' , compact('roles'));
+    } // End method
+
+
+    public function AddRole()
+    {
+        return view('backend.pages.roles.add_role');
+    } //End Method
+
+    public function storeRole(Request $request)
+    {
+        //validation
+        $request->validate([
+            'name' => 'string|max:200',
+        ]);
+
+        Role::create([
+            'name' => $request->name,
+
+        ]);
+
+        $notification = [
+            'message'       => 'Role created successfully',
+            'alert-type'    => 'success'
+        ];
+
+        return redirect()->route('all.role')->with($notification);
+    } //End  method
+
+    public function EditRole($id)
+    {
+        $role = Role::findOrFail($id);
+
+        return view('backend.pages.roles.edit_role' , compact('role'));
+    } //End Role
+
+    public function UpdateRole(Request $request)
+    {
+        //validation
+        $request->validate([
+            'name' => 'string|max:200',
+        ]);
+
+        Role::find($request->id)->update([
+            'name' => $request->name,
+
+        ]);
+
+        $notification = [
+            'message'       => 'Role updated successfully',
+            'alert-type'    => 'success'
+        ];
+
+        return redirect()->route('all.role')->with($notification);
+
+    } //End mehtod
+
+    public function deleteRole($id)
+    {
+        Role::findOrFail($id)->delete();
+
+        $notification = [
+            'message'       => 'Role deleted successfully',
+            'alert-type'    => 'success'
+        ];
+
+        return redirect()->route('all.role')->with($notification);
+
+    } //End method
+
+    public function ImportRole()
+    {
+        return view('backend.pages.Role.import_Role');
+    }// End method
+
+
+
+
+
 }
