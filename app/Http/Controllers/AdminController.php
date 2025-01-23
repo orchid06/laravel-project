@@ -107,4 +107,13 @@ class AdminController extends Controller
 
         return redirect()->back()->with($notification);
     }
+
+    /////////Admin User all method //////////
+
+    public function AllAdmin()
+    {
+        $alladmin = User::where('role' , 'admin')->get();
+
+        return view('backend.pages.admin.all_admin' , compact('alladmin'));
+    }
 }

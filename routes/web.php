@@ -113,9 +113,12 @@ Route::middleware(['auth' , 'role:admin'])->group(function(){
 
         Route::post('/admin/roles/update', 'AdminRolesUpdate')->name('admin.roles.update');
 
+    });
 
-
-
+    //Admin user all route
+    Route::controller(AdminController::class)->group(function(){
+        Route::get('/all/admin' , 'AllAdmin')->name('all.admin');
+        Route::get('/add/admin' , 'AddAdmin')->name('add.admin');
 
 
     });
