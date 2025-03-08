@@ -57,4 +57,32 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    public function date() {
+        $this->getWeekRange('29-03-2024');
+    }
+
+    public function getWeekRange($date)
+    {
+        $carbonDate = \Carbon\Carbon::parse($date);
+        $year = $carbonDate->year;
+        $month = $carbonDate->month;
+        $day = $carbonDate->day;
+
+
+
+        // Determine the week number (starting from 1)
+        $weekNumber = ceil($day / 7);
+
+        // Calculate start and end date of the week
+        $weekStart = (($weekNumber - 1) * 7) + 1;
+        $weekEnd = min($weekStart + 6, $carbonDate->daysInMonth); // Ensure end doesn't exceed month days
+
+        $data = [
+            'start' => "{$year}-{$month}-" . str_pad($weekStart, 2, '0', STR_PAD_LEFT),
+            'end' => "{$year}-{$month}-" . str_pad($weekEnd, 2, '0', STR_PAD_LEFT)
+        ];
+
+        dd($data);
+    }
 }
